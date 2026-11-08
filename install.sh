@@ -41,3 +41,12 @@ EOF
 
 # 9. Build the release or debug APK
 gradle assembleRelease # or: gradle assembleDebug
+
+# 10.
+# i) Settings -> About phone -> tap build number 7 times until Developer mode is enabled
+# ii) Settings -> System -> Developer options -> Enable USB debugging (best disable after this)
+# iii) Unlock your phone
+
+# 11. Install to device
+adb devices
+adb install app/build/outputs/apk/release/app-release.apk
