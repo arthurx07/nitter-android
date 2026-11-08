@@ -232,23 +232,45 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val items = bookmarks.toTypedArray()
-        AlertDialog.Builder(this)
+        val adapter = android.widget.ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            bookmarks
+        )
+
+        val dialog = AlertDialog.Builder(this)
             .setTitle("User Bookmarks (tap to open or long-press to delete)")
-            .setItems(items) { _, which ->
-                val handle = bookmarks[which].removePrefix("@")
-                webView.loadUrl("$currentInstance/$handle")
-            }
+            .setAdapter(adapter, null)
             .setNeutralButton("Clear All") { _, _ ->
                 AlertDialog.Builder(this)
                 .setTitle("Are you sure you want to clear all bookmarks?")
                 .setPositiveButton("Yes") { _, _ ->
                     saveBookmarks(emptyList())
+                    Toast.makeText(this, "Cleared all bookmarks", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("No", null)
                 .show()
             }
-            .show()
+            .create()
+
+        dialog.show()
+
+        // Tap to open bookmark
+        dialog.listView.onItemClickListener = android.widget.AdapterView.OnItemClickListener { _, _, position, _ ->
+            val handle = bookmarks[position].removePrefix("@")
+            webView.loadUrl("$currentInstance/$handle")
+            dialog.dismiss()
+        }
+
+        // Long press to delete individual bookmark
+        dialog.listView.onItemLongClickListener = android.widget.AdapterView.OnItemLongClickListener { _, _, position, _ ->
+            val removed = bookmarks.removeAt(position)
+            saveBookmarks(bookmarks)
+            Toast.makeText(this, "Deleted @$removed", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+            showBookmarksDialog()
+            true
+        }
     }
 
     private fun promptAddBookmark() {
