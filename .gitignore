@@ -1,0 +1,22 @@
+# Gradle & Build Outputs
+.kotlin/
+.kotlin-cache/
+.gradle/
+build/
+*/build/
+captures/
+
+# Security & Secrets (NEVER COMMIT)
+*.jks
+*.keystore
+keystore.properties
+
+# Local Machine Environment
+local.properties
+
+# Memory Dumps & Profiling
+*.hprof
+
+# OS & System Files
+*~
+*.swp
